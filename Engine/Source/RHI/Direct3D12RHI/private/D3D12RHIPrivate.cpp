@@ -5,6 +5,7 @@
 #include <Window/IWindow.h>
 #include <Math/Vector.h>
 #include <Math/Matrix.h>
+#include <chrono>
 
 namespace GameEngine
 {
@@ -250,16 +251,22 @@ namespace GameEngine
 
 		void D3D12RHIPrivate::Update(Mesh::Ptr mesh, Material::Ptr material)
 		{
+
+			static auto start = std::chrono::system_clock::now();
+			auto current = std::chrono::system_clock::now();
+			std::chrono::duration<double> duration = current - start;
+			float timer = duration.count();
+
 			D3D12Mesh d3d12Mesh = *reinterpret_cast<D3D12Mesh*>(mesh.get());
 			D3D12Material d3d12Material = *reinterpret_cast<D3D12Material*>(material.get());
 
 			float mTheta = 1.5f * DirectX::XM_PI;
-			float mPhi = DirectX::XM_PIDIV4;
+			float mPhi = 0.5f * DirectX::XM_PIDIV4;
 			float mRadius = 5.0f;
 
 			// Convert Spherical to Cartesian coordinates.
-			float x = mRadius * sinf(mPhi) * cosf(mTheta);
-			float z = mRadius * sinf(mPhi) * sinf(mTheta);
+			float x = mRadius * sinf(mPhi) * cosf(mTheta) + sinf(timer);
+			float z = mRadius * sinf(mPhi) * sinf(mTheta) + cosf(timer);
 			float y = mRadius * cosf(mPhi);
 
 			// Build the view matrix.
