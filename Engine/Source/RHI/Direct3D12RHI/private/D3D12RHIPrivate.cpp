@@ -265,9 +265,9 @@ namespace GameEngine
 			float mRadius = 5.0f;
 
 			// Convert Spherical to Cartesian coordinates.
-			float x = mRadius * sinf(mPhi) * cosf(mTheta) + sinf(timer);
-			float z = mRadius * sinf(mPhi) * sinf(mTheta) + cosf(timer);
-			float y = mRadius * cosf(mPhi);
+			float x = mRadius * sinf(mPhi) * cosf(mTheta);
+			float z = mRadius * sinf(mPhi) * sinf(mTheta) + sinf(timer);
+			float y = mRadius * cosf(mPhi) + cosf(timer);
 
 			// Build the view matrix.
 			Math::Vector3f pos = Math::Vector3f(x, y, z);
