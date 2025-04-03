@@ -37,11 +37,11 @@ namespace GameEngine::World
 
 	void GameWorld::LoadCurrentLevel()
 	{
-		for (const LevelObject& levelObject : m_CurrentLevel.value().GetLevelObjects())
+		for (const auto& [id, levelObject] : m_CurrentLevel.value().GetLevelObjects())
 		{
 			flecs::entity newEntity = m_World.entity(levelObject.GetName().c_str());
 
-			for (const LevelObject::Component& objComponent : levelObject.GetComponents())
+			for (const auto& [id, objComponent] : levelObject.GetComponents())
 			{
 				flecs::entity comp = m_World.lookup(objComponent.first.c_str());
 				assert(comp.is_valid());
@@ -80,7 +80,7 @@ namespace GameEngine::World
 
 	void GameWorld::UnloadCurrentLevel()
 	{
-		for (const LevelObject& levelObject : m_CurrentLevel.value().GetLevelObjects())
+		for (const auto& [id, levelObject] : m_CurrentLevel.value().GetLevelObjects())
 		{
 			flecs::entity entityToRemove = m_World.lookup(levelObject.GetName().c_str());
 

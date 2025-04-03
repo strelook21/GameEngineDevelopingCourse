@@ -9,8 +9,9 @@ namespace GameEngine::EntitySystem::LevelEditorECS
 {
 	struct PositionDesc
 	{
-		const World::LevelObject::ComponentDesc* value;
+		unsigned int objectID;
+		unsigned int componentID;
 	};
 
-	void RegisterLevelEditorEcsSystems(flecs::world& world);
+	void RegisterLevelEditorEcsSystems(flecs::world& world, World::Level& level);
 }

@@ -3,14 +3,13 @@
 namespace
 {
 	void ParsePosition(
-		const GameEngine::EntitySystem::LevelEditorECS::PositionDesc& positionDesc,
+		const std::string& positionDesc,
 		GameEngine::EntitySystem::EditorECS::Position& position
 	)
 	{
-		assert(positionDesc.value);
-		assert(std::ranges::count(*positionDesc.value, ',') == 2);
+		//assert(std::ranges::count(positionDesc, ',') == 2);
 
-		const char* compValue = positionDesc.value->c_str();
+		const char* compValue = positionDesc.c_str();
 		char* end;
 
 		float f = std::strtof(compValue, &end);
@@ -28,12 +27,12 @@ namespace
 
 namespace GameEngine::EntitySystem::LevelEditorECS
 {
-	void RegisterLevelEditorEcsSystems(flecs::world& world)
+	void RegisterLevelEditorEcsSystems(flecs::world& world, World::Level& level)
 	{
 		world.system<const PositionDesc, EntitySystem::EditorECS::Position>()
 			.each([&](const PositionDesc& positionDesc, EntitySystem::EditorECS::Position& position)
 				{
-					ParsePosition(positionDesc, position);
+					ParsePosition(level.GetLevelObject(positionDesc.objectID)->GetComponent(positionDesc.componentID)->second, position);
 				});
 	}
 }

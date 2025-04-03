@@ -1,6 +1,7 @@
 #pragma once
 
 #include <World/export.h>
+#include <map>
 
 namespace GameEngine::World
 {
@@ -9,11 +10,21 @@ namespace GameEngine::World
 	public:
 		using ComponentName = std::string;
 		using ComponentDesc = std::string;
-		using Component = std::pair<ComponentName, ComponentDesc>;
-		using ComponentList = std::vector<Component>;
+		struct Component {
+			Component(const ComponentName& name = "N\\A", const ComponentDesc& desc = "N\\A") : first(name), second(desc) { static unsigned int global_cID = 0; id = global_cID++; }
+
+			ComponentName first;
+			ComponentDesc second;
+
+			unsigned int GetID() const { return id; }
+
+		private:
+			unsigned int id = 0;
+		};
+		using ComponentList = std::map<unsigned int, Component>;
 
 	public:
-		LevelObject() = default;
+		LevelObject() { static unsigned int global_oID = 0; m_ID = global_oID++; }
 		~LevelObject() = default;
 
 	public:
@@ -22,9 +33,12 @@ namespace GameEngine::World
 		void AddComponent(const ComponentName& name, const ComponentDesc& desc);
 		const ComponentList& GetComponents() const { return m_ComponentList; }
 		ComponentList& GetComponents() { return m_ComponentList; }
+		Component* GetComponent(unsigned int id) { return &m_ComponentList[id]; }
+		unsigned int GetID() const { return m_ID;  }
 
 	private:
 		std::string m_Name = "None";
 		ComponentList m_ComponentList;
+		unsigned int m_ID = 0;
 	};
 }
