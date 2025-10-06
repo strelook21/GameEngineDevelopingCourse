@@ -25,11 +25,15 @@ namespace GameEngine::Render
 		frameMutex[m_CurMainFrame].lock();
 
 		m_Thread = std::make_unique<std::jthread>(RunThisThread, this);
-		m_Thread->detach();
+		//m_Thread->detach();
+		/// can't control thread if using detach()
 	}
 
 	RenderThread::~RenderThread()
 	{
+		m_Running = false; // stop the update loop
+		frameMutex[m_CurMainFrame].unlock(); // first frame locked at initialisation -> last frame unlocked at destruction
+		m_Thread->join(); // close thread
 		delete m_RenderEngine;
 	}
 
@@ -42,7 +46,7 @@ namespace GameEngine::Render
 
 		m_RenderEngineIsReady.release();
 
-		while (true)
+		while (m_Running)
 		{
 			std::lock_guard<std::mutex> lock(frameMutex[m_CurrRenderFrame]);
 

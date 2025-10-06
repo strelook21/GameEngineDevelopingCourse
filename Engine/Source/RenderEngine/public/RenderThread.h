@@ -54,6 +54,7 @@ namespace GameEngine::Render
 		std::unique_ptr<std::jthread> m_Thread;
 		std::mutex frameMutex[RenderCore::g_FrameBufferCount];
 		std::binary_semaphore m_RenderEngineIsReady{ 0 };
+		std::atomic_bool m_Running = true; // used to stop the update loop when closing
 
 		RenderEngine* m_RenderEngine = nullptr;
 
